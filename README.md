@@ -93,6 +93,8 @@ except:
 
 #### Next we create the code to update status (aka tweeting)
 
+- What we will do is create a text variable to hold our text we want in the tweet. Feel free to modify the below text and then a "chunked" media upload variable to add our images or videos to our tweet.
+
 ```python
 text = """How efficient is #Cardano ? 
 
@@ -103,6 +105,12 @@ Over 200 blocks on these two solar panels wired in series.
 Absolutely no reason to stake inside a datacenter. Thats called centralization. 
 
 What do we want?  #TrueDecentralization and network resilience."""
+```
+```python
+chunked_media = api.chunked_upload(filename='centered-star-forge.gif', media_category='tweet_gif')
+```
+```python
+update_status = api.update_status(status=text, media_ids=[chunked_media.media_id])
 ```
 
 
