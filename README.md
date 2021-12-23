@@ -70,9 +70,14 @@ nano twitterbot.py
 ```python
 import tweepy
 import pandas as pd
+import os
+
+here = os.path.dirname(os.path.abspath(__file__))
+
+filename = os.path.join(here, 'twitter_api_keys.csv')
 
 # Twitter API credentials
-key_df = pd.read_csv('twitter_api_keys.csv')
+key_df = pd.read_csv(filename)
 consumer_api_key = key_df[key_df.type == 'key']['Password'].values[0]
 consumer_secret_key = key_df[key_df.type == 'secret']['Password'].values[0]
 consumer_token = key_df[key_df.type == 'token']['Password'].values[0]
@@ -93,7 +98,7 @@ except:
 
 #### Next we create the code to update status (aka tweeting)
 
-- What we will do is create a text variable to hold our text we want in the tweet. Feel free to modify the below text and then a "chunked" media upload variable to add our images or videos to our tweet.
+- Lets make a variable to hold our tweet's text
 
 ```python
 text = """How efficient is #Cardano ? 
@@ -105,13 +110,51 @@ Over 200 blocks on these two solar panels wired in series.
 Absolutely no reason to stake inside a datacenter. Thats called centralization. 
 
 What do we want?  #TrueDecentralization and network resilience."""
+
 ```
+- Now we need to upload the media to twitter using the chunked uploader feature
+
 ```python
-chunked_media = api.chunked_upload(filename='centered-star-forge.gif', media_category='tweet_gif')
+media_filename = os.path.join(here, 'centered-star-forge.gif')
+
+chunked_media = api.chunked_upload(filename=media_filename, media_category='tweet_gif')
 ```
+- Now we can update the status with the media and our text
 ```python
 update_status = api.update_status(status=text, media_ids=[chunked_media.media_id])
 ```
 
+### The last thing we need to do now is set up our cron job to run our code on our schedule
 
+- We will run the script once a day at 9am everyday
 
+Open up a terminal and run the following command to check if you have cron jobs running:
+
+```bash
+crontab -l
+```
+
+If you don't have any cron jobs running, then you can add a new cron job by this command:
+
+```bash
+crontab -e
+```
+This will open a VIM based text editor for you to add your cron job to the cron job file.
+
+We need to know our path for python package on our machine so we can run our code and you can find that by typing following command and then copy the path:
+```bash
+which python
+```
+
+you simply need to add the following line to the cron job file (use absolute paths):
+```bash
+0 9 * * * /User/wael/opt/anaconda3/bin/python /home/username/tweepy-bots/twitterbot.py
+```
+
+Now you can open terminal and run the following command to check if your cron job is running properly by checking your systems mail:
+
+```bash
+cd /var/mail
+
+nano wael
+```
