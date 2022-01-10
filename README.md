@@ -25,9 +25,9 @@ Steps:
 
 For clarification:
 
-API Key = key 
+Consumer API Key = key 
 
-API Secret = secret 
+Consumer API Secret = secret 
 
 Bearer Token = token
 
