@@ -11,29 +11,20 @@ Steps:
 3. Fill out the form  and then proceed to agree to sign away your rights to twitter lmao
 4. Verify Email
 5. Create App Name
-6. Get your keys and store them into a csv or however you would like (for this guide we use a csv file)
+6. Get your keys and store them safely (for this guide we use a .env file)
 
-#### Here is how I have set up my csv file for keys:
 
-| Type                | Secret Key   |
-|---------------------|--------------|
-| key                 | ***********  |
-| secret              | ***********  |
-| token               | ***********  |
-| access_token        | ***********  |
-| access_token_secret | ***********  |
+For clarification my keys are stored in a .env file as follows:
 
-For clarification:
+Consumer API Key = KEY 
 
-Consumer API Key = key 
+Consumer API Secret = SECRET 
 
-Consumer API Secret = secret 
+Bearer Token = TOKEN
 
-Bearer Token = token
+Access Token = ACCESS_TOKEN 
 
-Access Token = access_token 
-
-Access Token Secret = access_token_secret
+Access Token Secret = ACCESS_TOKEN_SECRET
 
 
 
@@ -69,24 +60,22 @@ nano twitterbot.py
 
 ```python
 import tweepy
+import random
 import pandas as pd
 import os
-
-here = os.path.dirname(os.path.abspath(__file__))
-
-filename = os.path.join(here, 'twitter_api_keys.csv')
+from dotenv import load_dotenv
+load_dotenv()
 
 # Twitter API credentials
-key_df = pd.read_csv(filename)
-consumer_api_key = key_df[key_df.type == 'key']['Password'].values[0]
-consumer_secret_key = key_df[key_df.type == 'secret']['Password'].values[0]
-consumer_token = key_df[key_df.type == 'token']['Password'].values[0]
-access_token_secret = key_df[key_df.type == 'access_token_secret']['Password'].values[0]
-access_token = key_df[key_df.type == 'access_token']['Password'].values[0]
+consumer_api_key = os.getenv("KEY")
+consumer_secret_key = os.getenv("SECRET")
+consumer_token = os.getenv("TOKEN")
+access_token = os.getenv("ACCESS_TOKEN")
+access_token_secret = os.getenv("ACCESS_TOKEN_SECRET")
 
+# Build the API object with our credentials
 auth = tweepy.OAuthHandler(consumer_api_key, consumer_secret_key)
 auth.set_access_token(access_token, access_token_secret)
-
 api = tweepy.API(auth)
 
 try:
